@@ -17,6 +17,7 @@ const Login = () => {
 
         signInUser(email, password)
             .then(result => {
+                console.log(result.user);
                 Swal.fire({ icon: 'success', title: 'Login Successful!' });
                 navigate(from, { replace: true }); 
             })
