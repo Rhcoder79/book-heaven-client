@@ -1,15 +1,37 @@
 import React from 'react';
 import { Link } from 'react-router';
 import logo from "./../../assets/Book-Haven.png";
+import { use } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 
 const Navbar = () => {
+
+    const {user,signOutUser}=use(AuthContext);
+
+      const handleSignOut = () => {
+        signOutUser()
+            .then()
+            .catch()
+    }
+
     const navLinks = (
         <>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/allBooks">All Books</Link></li>
             {/* <li><Link to="/addBook">Add Book</Link></li>
             <li><Link to="/myBooks">My Books</Link></li> */}
+       {
+        user && <>
+         <li><Link to="/addBook">Add Book</Link></li>
+        <li><Link to="/myBooks">My Books</Link></li>
+        </>
+
+       }
+            {/*
+             <li><Link to="/addBook">Add Book</Link></li>
+            <li><Link to="/myBooks">My Books</Link></li>
+             */}
         </>
     );
 
@@ -41,8 +63,25 @@ const Navbar = () => {
                 </ul>
             </div>
 
-            <div className="navbar-end">
-                <button className="btn btn-sm md:btn-md btn-neutral">Login</button>
+            <div className="navbar-end gap-4">
+            {user ? (
+                        <div className="flex items-center gap-3">
+                           
+                            <div className="tooltip tooltip-bottom" data-tip={user?.displayName || "User Name"}>
+                                <div className="avatar">
+                                    <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                        <img src={user?.photoURL || "https://i.ibb.co/mR79Y6B/user.png"} alt="user" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button onClick={handleSignOut} className="btn btn-sm md:btn-md btn-primary">Sign Out</button>
+                        </div>
+                    ) : (
+                        <div className='flex gap-2'>
+                            <Link to='/login' className="btn btn-sm md:btn-md btn-outline">Login</Link>
+                            <Link to='/register' className="btn btn-sm md:btn-md btn-primary">Register</Link>
+                        </div>
+                    )}
             </div>
         </div>
      </div>
