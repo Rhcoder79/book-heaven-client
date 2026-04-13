@@ -14,6 +14,8 @@ import MyBooks from './components/MyBooks/MyBooks.jsx';
 import AddBook from './components/AddBook/AddBook.jsx';
 import PrivateRoute from './Routes/PrivateRoute.jsx';
 import Login from './components/Login/Login.jsx';
+import UpdateBook from './components/UpdataBook/UpdateBook.jsx';
+import BookDetails from './components/BookDetails/BookDetails.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,7 @@ const router = createBrowserRouter([
         Component:Home,
       },
       {
-        path:'allBooks',
+        path:'/allBooks',
         Component:AllBooks
       },
       {
@@ -44,7 +46,15 @@ const router = createBrowserRouter([
       {
         path:'addBook',
         element:<PrivateRoute><AddBook></AddBook></PrivateRoute>
-      }
+      },
+     {
+  path: 'allBooks/update/:id', 
+  element: <PrivateRoute><UpdateBook /></PrivateRoute>
+},
+{
+  path: 'allBooks/details/:id', 
+  Component: BookDetails
+}
     ]
   },
 ]);

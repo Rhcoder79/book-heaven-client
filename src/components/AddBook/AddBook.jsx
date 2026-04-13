@@ -31,7 +31,7 @@ const AddBook = () => {
                 if (data.insertedId) {
                     Swal.fire({ icon: 'success', title: 'Success!', text: 'Book added successfully!' });
                     form.reset();
-                    navigate('/all-books');
+                    navigate('/allBooks');
                 }
             });
     };
