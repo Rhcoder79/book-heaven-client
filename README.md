@@ -30,7 +30,7 @@ Check out the live site here:
 
 ## ⚙️ Local Setup Instructions
 
-1.  **Clone the repository:**
+1.  **Clone the repository:https://github.com/Rhcoder79/book-heaven-client
     ```bash
     git clone [https://github.com/your-username/book-heaven.git](https://github.com/your-username/book-heaven.git)
     ```
