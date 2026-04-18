@@ -31,29 +31,29 @@ const router = createBrowserRouter([
         Component:AllBooks
       },
       {
-        path:'register',
+        path:'/register',
         Component:Register
       },
       {
-        path:'login',
+        path:'/login',
         Component:Login
       }
       ,
       {
-        path:'myBooks',
+        path:'/myBooks',
         element:<PrivateRoute><MyBooks></MyBooks></PrivateRoute>
       },
       {
-        path:'addBook',
+        path:'/allBooks/addBook',
         element:<PrivateRoute><AddBook></AddBook></PrivateRoute>
       },
      {
-  path: 'allBooks/update/:id', 
+  path: '/allBooks/update/:id', 
   element: <PrivateRoute><UpdateBook /></PrivateRoute>
 },
 {
-  path: 'allBooks/details/:id', 
-  Component: BookDetails
+  path: '/allBooks/details/:id', 
+  element:<PrivateRoute><BookDetails></BookDetails>  </PrivateRoute>
 }
     ]
   },

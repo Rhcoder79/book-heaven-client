@@ -27,7 +27,7 @@ const Home = () => {
                     </p>
                     <div className="flex justify-center gap-4">
                         <Link to="/allBooks" className="btn btn-warning shadow-lg border-none">All Books</Link>
-                        <Link to="/addBook" className="btn btn-outline text-white hover:bg-white hover:text-black">Add New Book</Link>
+                        <Link to="allBooks/addBook" className="btn btn-outline text-white hover:bg-white hover:text-black">Add New Book</Link>
                     </div>
                 </div>
             </section>

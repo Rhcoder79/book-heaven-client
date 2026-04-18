@@ -26,14 +26,24 @@ const AddBook = () => {
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(newBook)
         })
-            .then(res => res.json())
+            .then(res =>{
+    
+    if (!res.ok) {
+        throw new Error('problem to go');
+    }
+    return res.json();
+})
             .then(data => {
                 if (data.insertedId) {
                     Swal.fire({ icon: 'success', title: 'Success!', text: 'Book added successfully!' });
                     form.reset();
                     navigate('/allBooks');
                 }
-            });
+            }).catch(error => {
+
+    console.error("Error:", error);
+    Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+});
     };
 
     return (

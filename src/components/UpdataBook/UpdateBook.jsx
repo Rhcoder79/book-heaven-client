@@ -5,40 +5,66 @@ import Swal from 'sweetalert2';
 const UpdateBook = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [book, setBook] = useState({});
+    const [book, setBook] = useState(null);
 
-    useEffect(() => {
-        fetch(`http://localhost:3000/products/${id}`)
-            .then(res => res.json())
-            .then(data => setBook(data));
-    }, [id]);
-
-    const handleUpdate = (e) => {
-        e.preventDefault();
-        const form = e.target;
-
-        const updatedBook = {
-            title: form.title.value,
-            author: form.author.value,
-            genre: form.genre.value,
-            rating: parseFloat(form.rating.value),
-            summary: form.summary.value,
-            coverImage: form.coverImage.value
-        };
-
-        fetch(`http://localhost:3000/products/${id}`, {
-            method: 'PATCH',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(updatedBook)
+   useEffect(() => {
+    fetch(`http://localhost:3000/products/${id}`)
+        .then(res => {
+            if (!res.ok) throw new Error('book info not found');
+            return res.json();
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.modifiedCount > 0) {
-                    Swal.fire({ icon: 'success', title: 'Success!', text: 'Book Updated Successfully!' });
-                    navigate('/allBooks');
-                }
-            });
+        .then(data => setBook(data))
+        .catch(err => {
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+        });
+}, [id]);
+  if (!book) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
+    }
+   // UpdateBook.jsx এর handleUpdate ফাংশন
+const handleUpdate = (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const updatedBook = {
+        title: form.title.value,
+        author: form.author.value,
+        genre: form.genre.value,
+        rating: parseFloat(form.rating.value),
+        summary: form.summary.value,
+        coverImage: form.coverImage.value
     };
+
+    fetch(`http://localhost:3000/products/${id}`, {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(updatedBook)
+    })
+    .then(async (res) => {
+        if (!res.ok) throw new Error('Update failed on server');
+        
+     
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            return res.json();
+        }
+        return {}; 
+    })
+    .then(data => {
+        
+        if (data.modifiedCount > 0 || data.matchedCount > 0) {
+            Swal.fire({ icon: 'success', title: 'Success!', text: 'Book Updated Successfully!' });
+            navigate('/allBooks');
+        } else {
+            Swal.fire({ icon: 'info', title: 'No Changes', text: 'You did not make any changes to update.' });
+        }
+    })
+    .catch(err => Swal.fire({ icon: 'error', title: 'Error', text: err.message }));
+};
 
     return (
         <div className="max-w-2xl mx-auto mt-10 p-8 bg-base-100 shadow-2xl rounded-xl border">

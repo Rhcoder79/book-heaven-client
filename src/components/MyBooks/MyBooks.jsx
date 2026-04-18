@@ -16,31 +16,37 @@ const MyBooks = () => {
         }
     }, [user?.email]);
 
-    const handleDelete = (id) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`http://localhost:3000/products/${id}`, {
-                    method: 'DELETE'
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.deletedCount > 0) {
-                            Swal.fire("Deleted!", "Your book has been removed.", "success");
-                            const remaining = myBooks.filter(book => book._id !== id);
-                            setMyBooks(remaining);
-                        }
-                    });
-            }
-        });
-    };
+  const handleDelete = (id) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`http://localhost:3000/products/${id}`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to delete");
+                return res.json();
+            })
+            .then(data => {
+                if (data.deletedCount > 0) {
+                    Swal.fire("Deleted!", "Your book has been removed.", "success");
+                    const remaining = myBooks.filter(book => book._id !== id);
+                    setMyBooks(remaining);
+                }
+            })
+            .catch(err => {
+                Swal.fire("Error!", "This book's ID format might be static. Only DB books can be deleted.", "error");
+            });
+        }
+    });
+};
 
     return (
         <div className="container mx-auto mt-10 p-5">
@@ -83,12 +89,8 @@ const MyBooks = () => {
                                 </td>
                                 <td>
                                     <div className="flex gap-2 justify-center">
-                                        <Link 
-                                            to={`/update-book/${book._id}`} 
-                                            className="btn btn-sm btn-info text-white shadow-md"
-                                        >
-                                            Update
-                                        </Link>
+                 <Link to={`/allBooks/update/${book._id}`}  className="btn btn-sm btn-info text-white shadow-md"> Update</Link>
+                                        
                                         <button 
                                             onClick={() => handleDelete(book._id)} 
                                             className="btn btn-sm btn-error text-white shadow-md"
@@ -106,7 +108,7 @@ const MyBooks = () => {
             {myBooks.length === 0 && (
                 <div className="text-center mt-20">
                     <p className="text-xl text-gray-400 italic">You haven't added any books yet!</p>
-                    <Link to="/add-book" className="btn btn-primary mt-4">Add Your First Book</Link>
+                    <Link to="/allBooks/addBook" className="btn btn-primary mt-4">Add Your First Book</Link>
                 </div>
             )}
         </div>

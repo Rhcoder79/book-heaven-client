@@ -7,8 +7,7 @@ const Login = () => {
     const {signInWithGoogle,signInUser}=use(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/"; 
-
+   const from = location.state?.from?.pathname || "/";
     const handleLogin = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -25,32 +24,39 @@ const Login = () => {
                 Swal.fire({ icon: 'error', title: 'Login Failed', text: error.message });
             });
     }
-    const handleGoogleSignIn=()=>{
-     signInWithGoogle()
-     .then(result=>{
-        console.log(result.user);
-        const newUser={
-            name:result.user.displayName,
-            email:result.user.email,
-            image:result.user.photoURL
-        }
-        //create user in the database
-        fetch('http://localhost:3000/users/',{
-         method:'POST',
-         headers:{
-            'content-type':'application/json'
-         },
-         body:JSON.stringify(newUser)
-        })
-          .then(() => {
-                    Swal.fire({ icon: 'success', title: 'Google Login Success!' });
-                    navigate(from, { replace: true });
-                });
+  
+const handleGoogleSignIn = () => {
+    signInWithGoogle()
+        .then(result => {
+            const user = result.user;
+            const newUser = {
+                name: user.displayName,
+                email: user.email,
+                image: user.photoURL
+            };
+
+          
+            fetch('http://localhost:3000/users', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(newUser)
             })
-            .catch(error => {
-                Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+            .then(res => res.json())
+            .then(() => {
+                Swal.fire({ icon: 'success', title: 'Success!', text: 'Login Successful!' });
+                navigate(from, { replace: true });
+            })
+            .catch(dbErr => {
+                console.error("Database save error:", dbErr);
+             
+                navigate(from, { replace: true });
             });
-    }
+        })
+        .catch(error => {
+            console.error("Google Auth Error:", error);
+            Swal.fire({ icon: 'error', title: 'Auth Failed', text: error.message });
+        });
+};
     return (
     <div className="card bg-base-100 mx-auto w-full max-w-sm shrink-0 shadow-2xl mt-10 p-5">
          <div>
