@@ -68,7 +68,7 @@ const AllBooks = () => {
                     className="select select-bordered w-full max-w-xs border-primary focus:outline-primary font-semibold"
                 >
                     <option value="normal">Normal (Default)</option>
-                    <option value="highToLow">Rating: High to Low ↓</option>
+                    <option value="highToLow">Rating: High to Low  ↓</option>
                     <option value="lowToHigh">Rating: Low to High ↑</option>
                 </select>
             </div>
@@ -95,7 +95,7 @@ const AllBooks = () => {
             </div>
             
             {books.length === 0 && (
-                <p className="text-center text-gray-500 mt-10">No books found.</p>
+                <p className="text-center text-gray-500 mt-8">No books found.</p>
             )}
         </div>
     );
