@@ -1,24 +1,36 @@
-import React, { use, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, {  useEffect, useState } from 'react';
+import { Link} from 'react-router';
 import Swal from 'sweetalert2';
-import { AuthContext } from '../../contexts/AuthContext';
+
+import axios from 'axios';
 
 const AllBooks = () => {
     const [books, setBooks] = useState([]);
     const [originalBooks, setOriginalBooks] = useState([]);
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+  
 
-    useEffect(() => {
-        fetch('http://localhost:3000/products')
-            .then(res => res.json())
-            .then(data => {
-                setBooks(data);
-                setOriginalBooks(data);
+   useEffect(() => {
+        
+        axios.get('http://localhost:3000/products')
+            .then(res => {
+                setBooks(res.data);
+                setOriginalBooks(res.data);
+                setLoading(false); 
             })
-            .catch(error => console.error('Error fetching books:', error));
+            .catch(err => {
+                console.error('Error:', err);
+                setLoading(false); 
+            });
     }, []);
+  if (loading) {
+    return (
+        <div className="flex justify-center items-center min-h-100">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+    );
+}
 
-    // সর্টিং হ্যান্ডলার ফাংশন
     const handleSortChange = (e) => {
         const sortType = e.target.value;
         let sortedBooks = [...originalBooks];
@@ -43,40 +55,7 @@ const AllBooks = () => {
         }
     };
 
-    const handleDelete = (id) => {
-        if (!user) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Please Login',
-                text: 'You need to be logged in to perform this action.',
-            }).then(() => navigate('/login'));
-            return;
-        }
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`http://localhost:3000/products/${id}`, { method: 'DELETE' })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.deletedCount > 0) {
-                        Swal.fire("Deleted!", "Book has been removed.", "success");
-                        const remaining = books.filter(book => book._id !== id);
-                        setBooks(remaining);
-                        setOriginalBooks(originalBooks.filter(book => book._id !== id));
-                    }
-                });
-            }
-        });
-    };
-
+   
     return (
         <div className="container mx-auto mt-10 p-4">
             <h2 className="text-4xl font-bold text-center mb-6">Explore Our Book Heaven</h2>
@@ -108,7 +87,7 @@ const AllBooks = () => {
                             <div className="card-actions mt-4 flex justify-between items-center border-t pt-4">
                                 <Link to={`/allBooks/details/${book._id}`} className="btn btn-primary btn-xs">Details</Link>
                                 <Link to={`/allBooks/update/${book._id}`} className="btn btn-warning btn-xs">Update</Link>
-                                <button onClick={() => handleDelete(book._id)} className="btn btn-error btn-xs">Delete</button>
+                             
                             </div>
                         </div>
                     </div>

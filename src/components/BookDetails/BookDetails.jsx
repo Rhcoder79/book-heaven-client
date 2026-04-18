@@ -3,30 +3,47 @@ import { useParams } from 'react-router';
 import { AuthContext } from '../../contexts/AuthContext';
 import Swal from 'sweetalert2';
 import { formatDistanceToNow } from 'date-fns';
+import axios from 'axios';
 
 const BookDetails = () => {
     const { id } = useParams();
-    const [book, setBook] = useState({});
-    const [comments, setComments] = useState([]); // কমেন্ট স্টেট
-    const { user } = useContext(AuthContext); // ইউজার তথ্য
-
-    // বইয়ের ডিটেইলস এবং কমেন্ট লোড করা
-    useEffect(() => {
-        fetch(`http://localhost:3000/products/${id}`)
-            .then(res => res.json())
-            .then(data => setBook(data));
-
-        fetchComments();
-    }, [id]);
-
-    // কমেন্ট ফেচ করার ফাংশন (রিয়েল-টাইম আপডেটের জন্য আলাদা করা হয়েছে)
-    const fetchComments = () => {
-        fetch(`http://localhost:3000/comments/${id}`)
-            .then(res => res.json())
-            .then(data => setComments(data));
+    const [book, setBook] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [comments, setComments] = useState([]); 
+    const { user } = useContext(AuthContext);
+     const fetchComments = () => {
+        axios.get(`http://localhost:3000/comments/${id}`)
+            .then(res => setComments(res.data))
+            .catch(err => console.error("Comments fetch error:", err));
     };
 
-    // কমেন্ট সাবমিট হ্যান্ডলার
+    useEffect(() => {
+      
+        axios.get(`http://localhost:3000/products/${id}`)
+            .then(res => {
+                setBook(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+               console.error("Book fetch error:", err);
+                setLoading(false);
+                Swal.fire("Error", "Could not load book details", "error");
+            });
+        
+        
+        fetchComments();
+
+       
+    }, [id]); 
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
+    }
+if (!book) return <p className="text-center mt-10">No book found!</p>;
     const handleCommentSubmit = (e) => {
         e.preventDefault();
         
@@ -42,34 +59,33 @@ const BookDetails = () => {
             userPhoto: user?.photoURL,
             userEmail: user?.email,
             commentText,
-            createdAt: new Date().toISOString() // সঠিক টাইম ফরম্যাট
+            createdAt: new Date().toISOString() 
         };
 
-        fetch('http://localhost:3000/comments', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(commentData)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.insertedId) {
-                e.target.reset();
-                fetchComments(); // সাথে সাথে লিস্ট আপডেট হবে
-                Swal.fire({
-                    title: 'Comment Posted!',
-                    icon: 'success',
-                    timer: 1000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            }
-        });
+        axios.post('http://localhost:3000/comments', commentData)
+            .then(res => {
+                if (res.data.insertedId) {
+                    e.target.reset();
+                    fetchComments(); 
+                    Swal.fire({
+                        title: 'Comment Posted!',
+                        icon: 'success',
+                        timer: 1000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
+            })
+            .catch(err => console.error("Post comment error:", err));
     };
+ 
+
+   
 
     return (
         <div className="container mx-auto mt-10 p-5">
-            {/* Book Details Card */}
+            
             <div className="flex flex-col lg:flex-row bg-base-100 shadow-2xl rounded-3xl overflow-hidden border">
                 <div className="lg:w-1/3">
                     <img src={book.coverImage} alt={book.title} className="h-full w-full object-cover" />
@@ -90,11 +106,9 @@ const BookDetails = () => {
                 </div>
             </div>
 
-            {/* Comment Section */}
             <div className="mt-16 max-w-4xl mx-auto">
                 <h3 className="text-3xl font-bold mb-8">Comments ({comments.length})</h3>
 
-                {/* Comment Input Box */}
                 {user ? (
                     <form onSubmit={handleCommentSubmit} className="mb-10 space-y-4">
                         <textarea
@@ -111,7 +125,7 @@ const BookDetails = () => {
                     </div>
                 )}
 
-                {/* Comments List Display */}
+               
                 <div className="space-y-6">
                     {comments.length > 0 ? (
                         comments.map((comment) => (

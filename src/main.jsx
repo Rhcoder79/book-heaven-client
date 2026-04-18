@@ -16,11 +16,13 @@ import PrivateRoute from './Routes/PrivateRoute.jsx';
 import Login from './components/Login/Login.jsx';
 import UpdateBook from './components/UpdataBook/UpdateBook.jsx';
 import BookDetails from './components/BookDetails/BookDetails.jsx';
+import ErrorPage from './components/ErrorPage/ErrorPage.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component:RootLayout,
+    errorElement: <ErrorPage />,
     children:[
       {
         index:true,

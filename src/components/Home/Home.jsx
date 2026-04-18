@@ -27,7 +27,7 @@ const Home = () => {
                     </p>
                     <div className="flex justify-center gap-4">
                         <Link to="/allBooks" className="btn btn-warning shadow-lg border-none">All Books</Link>
-                        <Link to="allBooks/addBook" className="btn btn-outline text-white hover:bg-white hover:text-black">Add New Book</Link>
+                        <Link to="/allBooks/addBook" className="btn btn-outline text-white hover:bg-white hover:text-black">Add New Book</Link>
                     </div>
                 </div>
             </section>
@@ -57,7 +57,7 @@ const Home = () => {
                     <p className="text-blue-600 font-bold">Rating: {book.rating} ⭐</p>
                     
                     <div className="card-actions justify-end">
-                        <button className="btn btn-sm btn-outline btn-primary">View Details</button>
+                       <Link to={`/allBooks/details/${book._id}`} className="btn btn-primary btn-xs">Details</Link>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ const Home = () => {
                     </p>
                     <button className="btn btn-primary">Learn More</button>
                 </div>
-            </section>
+            </section> 
 
         </div>
     );
