@@ -5,7 +5,7 @@ const Home = () => {
     const [books, setBooks] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/products')
+        fetch('https://the-book-haven-server-xi.vercel.app/products')
             .then(res => res.json())
             .then(data => {
                 setBooks(data.slice(0, 6)); 

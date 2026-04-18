@@ -21,7 +21,7 @@ const AddBook = () => {
 
         const newBook = { title, author, genre, rating, summary, coverImage, userEmail };
 
-        fetch('http://localhost:3000/products', {
+        fetch('https://the-book-haven-server-xi.vercel.app/products', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(newBook)

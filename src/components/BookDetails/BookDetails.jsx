@@ -12,14 +12,14 @@ const BookDetails = () => {
     const [comments, setComments] = useState([]); 
     const { user } = useContext(AuthContext);
      const fetchComments = () => {
-        axios.get(`http://localhost:3000/comments/${id}`)
+        axios.get(`https://the-book-haven-server-xi.vercel.app/comments/${id}`)
             .then(res => setComments(res.data))
             .catch(err => console.error("Comments fetch error:", err));
     };
 
     useEffect(() => {
       
-        axios.get(`http://localhost:3000/products/${id}`)
+        axios.get(`https://the-book-haven-server-xi.vercel.app/products/${id}`)
             .then(res => {
                 setBook(res.data);
                 setLoading(false);
@@ -62,7 +62,7 @@ if (!book) return <p className="text-center mt-10">No book found!</p>;
             createdAt: new Date().toISOString() 
         };
 
-        axios.post('http://localhost:3000/comments', commentData)
+        axios.post('https://the-book-haven-server-xi.vercel.app/comments', commentData)
             .then(res => {
                 if (res.data.insertedId) {
                     e.target.reset();

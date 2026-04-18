@@ -9,7 +9,7 @@ const MyBooks = () => {
 
     useEffect(() => {
         if (user?.email) {
-            fetch(`http://localhost:3000/products?userEmail=${user.email}`)
+            fetch(`https://the-book-haven-server-xi.vercel.app/products?userEmail=${user.email}`)
                 .then(res => res.json())
                 .then(data => setMyBooks(data))
                 .catch(err => console.error("Error fetching my books:", err));
@@ -27,7 +27,7 @@ const MyBooks = () => {
         confirmButtonText: "Yes, delete it!"
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`http://localhost:3000/products/${id}`, {
+            fetch(`https://the-book-haven-server-xi.vercel.app/products/${id}`, {
                 method: 'DELETE'
             })
             .then(res => {

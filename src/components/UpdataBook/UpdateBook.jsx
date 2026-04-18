@@ -8,7 +8,7 @@ const UpdateBook = () => {
     const [book, setBook] = useState(null);
 
    useEffect(() => {
-    fetch(`http://localhost:3000/products/${id}`)
+    fetch(`https://the-book-haven-server-xi.vercel.app/products/${id}`)
         .then(res => {
             if (!res.ok) throw new Error('book info not found');
             return res.json();
@@ -39,7 +39,7 @@ const handleUpdate = (e) => {
         coverImage: form.coverImage.value
     };
 
-    fetch(`http://localhost:3000/products/${id}`, {
+    fetch(`https://the-book-haven-server-xi.vercel.app/products/${id}`, {
         method: 'PATCH',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(updatedBook)

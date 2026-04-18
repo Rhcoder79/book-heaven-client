@@ -34,7 +34,7 @@ const Register = () => {
                         const newUser = { name, email, image: photo };
 
                         
-                        fetch('http://localhost:3000/users/', {
+                        fetch('https://the-book-haven-server-xi.vercel.app/users/', {
                             method: 'POST',
                             headers: { 'content-type': 'application/json' },
                             body: JSON.stringify(newUser)
@@ -57,7 +57,7 @@ const Register = () => {
                     email: result.user.email,
                     image: result.user.photoURL
                 };
-                fetch('http://localhost:3000/users/', {
+                fetch('https://the-book-haven-server-xi.vercel.app/users/', {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify(newUser)

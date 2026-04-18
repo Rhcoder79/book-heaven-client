@@ -12,7 +12,7 @@ const AllBooks = () => {
 
    useEffect(() => {
         
-        axios.get('http://localhost:3000/products')
+        axios.get('https://the-book-haven-server-xi.vercel.app/products')
             .then(res => {
                 setBooks(res.data);
                 setOriginalBooks(res.data);
